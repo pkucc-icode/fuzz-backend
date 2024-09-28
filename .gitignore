@@ -1,0 +1,18 @@
+node_modules
+# Keep environment variables out of version control
+.env
+
+
+prisma/dev.db
+
+
+# fuzz 
+afl_fuzz
+
+# env file
+.env
+
+
+uploads
+
+.nitro
