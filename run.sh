@@ -21,8 +21,8 @@ if ! python3 agent.py "$json_file"; then
     exit 1
 fi
 
-# DO NOT use localhost api address, i don't know why it not works
-url="http://192.168.200.146:5330/api/callback"
+# if callback failure please check this url, i don't know why it not works
+url="http://localhost:5330/api/callback"
 
 
 
