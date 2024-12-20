@@ -24,8 +24,7 @@ if ! python3 agent.py "$json_file"; then
 fi
 
 # if callback failure please check this url, i don't know why it not works
-# url="http://localhost:5330/api/fuzz/callback"
-url="http://192.168.200.146:5330/api/fuzz/callback-openfuzz"
+url="http://localhost:5330/api/fuzz/callback-openfuzz"
 
 
 

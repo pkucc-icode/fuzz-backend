@@ -104,7 +104,7 @@ async function startOpenFuzz(id: string, name: string, repoUrl: string, filePath
   const jsonString = JSON.stringify(data, null, 4); // 第三个参数4用于格式化输出
   await writeFile(id, jsonString);
 
-  spawnPromise('bash', ['openfuzz.sh', id], id)
+  spawnPromise('bash', ['bash/openfuzz.sh', id], id)
     .then((output: string) => {
       console.log('openfuzz.sh执行成功');
     })

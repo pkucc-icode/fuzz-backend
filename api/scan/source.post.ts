@@ -79,7 +79,7 @@ async function startSourceScan(id: string, name: string, repoUrl: string, filePa
  async function writeFile(id: string, jsonString: string) {
   try {
     await fs.mkdir(`work/${id}`, { recursive: true });
-    await fs.writeFile(`work/${id}/config.json`, jsonString);
+    await fs.writeFile(`work/${id}/scan-config.json`, jsonString);
     console.log('File written successfully');
   } catch (err) {
     console.error('Error writing file:', err);

@@ -100,7 +100,7 @@ async function startWebFuzz(project: Project) {
   const jsonString = JSON.stringify(data, null, 4);
   await writeFile(id, jsonString);
 
-  spawnPromise('bash', ['webfuzz.sh', id], id)
+  spawnPromise('bash', ['bash/webfuzz.sh', id], id)
     .then((output: string) => {
       console.log('webfuzz.sh执行成功');
     })

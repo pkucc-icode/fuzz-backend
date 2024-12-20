@@ -1,6 +1,5 @@
 echo "start do web fuzz"
-url="http://192.168.200.146:5330/api/fuzz/callback-webfuzz"
-echo "sss====>$url"
+url="http://192.168.220.11:5330/api/fuzz/callback-webfuzz"
 
 # 发送 HTTP 请求函数
 do_send() {

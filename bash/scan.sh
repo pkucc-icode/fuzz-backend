@@ -1,7 +1,9 @@
 #!/bin/bash
 cd work
-cp agent_weggli.py $1
-cp weggli.py $1
+
+cp -r scan/joern/ $1/
+cp -r scan/weggli/ $1/
+
 cd $1
 
 # 检查是否提供了参数
@@ -10,11 +12,15 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
-json_file="config.json"
-result_file="code_result.json"
-if ! python3 agent_weggli.py "$json_file"; then
+json_file="scan-config.json"
+result_file="scan-result.json"
+
+cp $json_file joern/
+cd joern/
+
+if ! python3 joern.py "$json_file"; then
     # 如果命令执行失败，则打印错误信息
-    echo "Error: Failed to execute python3 agent_weggli.py $json_file"
+    echo "Error: Failed to execute python3 joern.py $json_file"
     exit 1
 fi
 
