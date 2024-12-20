@@ -3,7 +3,6 @@ import { unAuthorizedResponse } from '~/utils/response';
 import { spawnPromise } from '~/utils/fuzz';
 import prisma from '~/lib/prisma';
 import fs from 'fs/promises';
-import { Project } from '@prisma/client';
 
 export default eventHandler(async (event) => {
   const userinfo = verifyAccessToken(event);
@@ -105,9 +104,9 @@ async function startOpenFuzz(id: string, name: string, repoUrl: string, filePath
   const jsonString = JSON.stringify(data, null, 4); // 第三个参数4用于格式化输出
   await writeFile(id, jsonString);
 
-  spawnPromise('bash', ['run.sh', id], id)
+  spawnPromise('bash', ['openfuzz.sh', id], id)
     .then((output: string) => {
-      console.log('run.sh执行成功');
+      console.log('openfuzz.sh执行成功');
     })
     .catch((error: Error) => {
       console.error('命令执行失败:', error);
