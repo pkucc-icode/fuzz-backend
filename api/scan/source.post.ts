@@ -1,5 +1,6 @@
 import { verifyAccessToken } from '~/utils/jwt-utils';
 import { unAuthorizedResponse } from '~/utils/response';
+import { scanSpawnPromise } from '~/utils/scan';
 import prisma from '~/lib/prisma';
 import fs from 'fs/promises';
 
@@ -77,7 +78,8 @@ async function startSourceScan(id: string, name: string, repoUrl: string, filePa
 
  async function writeFile(id: string, jsonString: string) {
   try {
-    await fs.writeFile(`afl_fuzz/config-${id}.json`, jsonString);
+    await fs.mkdir(`work/${id}`, { recursive: true });
+    await fs.writeFile(`work/${id}/config.json`, jsonString);
     console.log('File written successfully');
   } catch (err) {
     console.error('Error writing file:', err);

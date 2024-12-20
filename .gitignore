@@ -7,7 +7,7 @@ prisma/dev.db
 
 
 # fuzz 
-afl_fuzz
+work
 
 # env file
 .env

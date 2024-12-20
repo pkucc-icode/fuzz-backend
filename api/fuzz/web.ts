@@ -8,11 +8,35 @@ export default eventHandler(async (event) => {
     return unAuthorizedResponse(event);
   }
 
-  const { name } = await readBody(event);
+  const { 
+    name, 
+    filePath, 
+    executionTime,
+    tokenRefreshInterval,
+    tokenRefreshCommand,
+    useSSL,
+    enableCheckers,
+    disableCheckers,
+    targetIp,
+    domain,
+    targetPort
+   } = await readBody(event);
   const project = await prisma.project.create({
     data: {
-      type:"webFuzz",
-      name
+      type: "webFuzz",
+      name,
+      filePath,
+      param: {
+        executionTime,
+        tokenRefreshInterval,
+        tokenRefreshCommand,
+        useSSL,
+        enableCheckers,
+        disableCheckers,
+        targetIp,
+        domain,
+        targetPort,
+      }
     },
   })
   return useResponseSuccess(project);

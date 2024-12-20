@@ -1,5 +1,8 @@
 #!/bin/bash
-cd afl_fuzz
+cd work
+cp agent_weggli.py $1
+cp weggli.py $1
+cd $1
 
 # 检查是否提供了参数
 if [ -z "$1" ]; then
@@ -7,8 +10,8 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
-json_file="config-$1.json"
-result_file="code_result-$1.json"
+json_file="config.json"
+result_file="code_result.json"
 if ! python3 agent_weggli.py "$json_file"; then
     # 如果命令执行失败，则打印错误信息
     echo "Error: Failed to execute python3 agent_weggli.py $json_file"

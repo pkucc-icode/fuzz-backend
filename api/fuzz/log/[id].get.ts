@@ -5,7 +5,7 @@ import prisma from '~/lib/prisma';
 export default eventHandler((event) => {
 
     const id = getRouterParam(event, 'id');
-    const logFilePath = path.resolve(`afl_fuzz/run-${id}.log`);
+    const logFilePath = path.resolve(`work/${id}/fuzz.log`);
 
     event.node.res.setHeader('Content-Type', 'text/event-stream');
     event.node.res.setHeader('Cache-Control', 'no-cache');

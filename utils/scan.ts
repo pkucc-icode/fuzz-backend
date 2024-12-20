@@ -6,7 +6,7 @@ import { promises as fs } from 'fs';
 // 创建一个 Promise 来处理 spawn
 export function scanSpawnPromise(command: string, args: string[], id: string) {
     return new Promise((resolve, reject) => {
-      const logStream = createWriteStream(`afl_fuzz/run-${id}.log`);
+      const logStream = createWriteStream(`work/${id}/scan.log`);
   
       const child = spawn(command, args);
   

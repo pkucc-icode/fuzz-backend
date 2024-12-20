@@ -117,7 +117,8 @@ async function startOpenFuzz(id: string, name: string, repoUrl: string, filePath
 
 async function writeFile(id: string, jsonString: string) {
   try {
-    await fs.writeFile(`afl_fuzz/config-${id}.json`, jsonString);
+    await fs.mkdir(`work/${id}`, { recursive: true });
+    await fs.writeFile(`work/${id}/config.json`, jsonString);
     console.log('File written successfully');
   } catch (err) {
     console.error('Error writing file:', err);

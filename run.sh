@@ -1,8 +1,11 @@
 #!/bin/bash
-cd afl_fuzz
+cd work
+cp agent.py $1
+cd $1
+
 rm -rf *output*
 rm -rf crash_*
-echo core | sudo tee /proc/sys/kernel/core_pattern
+# echo core | sudo tee /proc/sys/kernel/core_pattern
 
 # 检查是否提供了参数
 if [ -z "$1" ]; then
@@ -11,8 +14,7 @@ if [ -z "$1" ]; then
 fi
 
 # 构造JSON文件名
-json_file="config-$1.json"
-
+json_file="config.json"
 
 # 执行Python脚本并捕获错误
 if ! python3 agent.py "$json_file"; then
