@@ -20,11 +20,11 @@ cd joern/
 
 echo "开始执行joern.py"
 
-# if ! python3 joern.py "$json_file"; then
-#     # 如果命令执行失败，则打印错误信息
-#     echo "Error: Failed to execute python3 joern.py $json_file"
-#     exit 1
-# fi
+if ! python3 joern.py "$json_file"; then
+    # 如果命令执行失败，则打印错误信息
+    echo "Error: Failed to execute python3 joern.py $json_file"
+    exit 1
+fi
 
 callback_url="http://192.168.200.146:5330/api/scan/callback"
 

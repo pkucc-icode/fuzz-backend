@@ -2,9 +2,9 @@ import fs from 'fs';
 import path from 'path';
 import prisma from '~/lib/prisma';
 
-const locateLogFilePath = (id: string, type: string) => {
+const locateLogFilePath = (id: string, type: string, name: string) => {
     if ("sourceScan" == type) {
-        return path.resolve(`work/${id}/joern/_check.log`);
+        return path.resolve(`work/${id}/joern/${name}/test.out`);
     } else {
         return path.resolve(`work/${id}/fuzz.log`);
     }
@@ -20,9 +20,9 @@ export default eventHandler(async (event) => {
         },
     });
 
-    const { type } = project;
+    const { type, name } = project;
 
-    const logFilePath = locateLogFilePath(id, type);
+    const logFilePath = locateLogFilePath(id, type, name);
 
     event.node.res.setHeader('Content-Type', 'text/event-stream');
     event.node.res.setHeader('Cache-Control', 'no-cache');

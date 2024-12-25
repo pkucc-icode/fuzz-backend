@@ -41,10 +41,9 @@ do_send() {
     fi
 }
 
-project_name = $2
-cd TestDir/$project_name_$1
+cd TestDir/$2_$1
 
-result_file = "FuzzAnalyzerResult.json"
+result_file="FuzzAnalyzerResult.json"
 
 # 检查文件是否存在
 if [[ -f "$result_file" ]]; then
