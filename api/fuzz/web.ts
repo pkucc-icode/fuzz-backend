@@ -83,16 +83,19 @@ async function startWebFuzz(project: Project) {
     tokenRefreshCommand: token_refresh_command,
   } = param as Record<string, any>;
   const data = {
-      "project_id": name,
+      "project_id": id,
       "fuzz_task_name": name,
-      "package_filename": filePath,
-      "fuzz_execution_time": fuzz_execution_time,
-      "target_ip": target_ip,
-      "target_port": target_port,
-      "use_ssl": use_ssl,
+      "package_filename": filePath || "js_docker_fuzz.zip",
+      "api_spec_name": "swagger.yml",
+      "compile_script_name": "build2.sh",
+      "start_script_name": "start2.sh",
+      "fuzz_execution_time": fuzz_execution_time || "0.01",
+      "target_ip": target_ip || '127.0.0.1',
+      "target_port": target_port || '3000',
+      "use_ssl": use_ssl || false,
       "enable_checkers": enable_checkers,
       "disable_checkers": disable_checkers,
-      "host": host,
+      "host": host || "127.0.0.1",
       "token_refresh_interval": token_refresh_interval,
       "token_refresh_command": token_refresh_command
   };

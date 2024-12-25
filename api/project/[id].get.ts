@@ -16,6 +16,7 @@ export default defineEventHandler(async (event) => {
     },
     include: {
       projectBugs: true, // Include all related bugs
+      projectScans: true,
     },
   })
 

@@ -1,11 +1,11 @@
 #!/bin/bash
 cd work
-cp agent.py $1
+cp openfuzz/* $1
 cd $1
 
 rm -rf *output*
 rm -rf crash_*
-# echo core | sudo tee /proc/sys/kernel/core_pattern
+echo core | sudo tee /proc/sys/kernel/core_pattern
 
 # 检查是否提供了参数
 if [ -z "$1" ]; then
@@ -24,7 +24,7 @@ if ! python3 agent.py "$json_file"; then
 fi
 
 # if callback failure please check this url, i don't know why it not works
-url="http://localhost:5330/api/fuzz/callback-openfuzz"
+url="http://192.168.200.146:5330/api/fuzz/callback-openfuzz"
 
 
 

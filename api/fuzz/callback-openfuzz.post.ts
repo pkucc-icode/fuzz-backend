@@ -6,6 +6,18 @@ export default defineEventHandler(async (event) => {
 
   console.log("id, status, result :", id, status, result);
 
+  if ('FAIL' === status) {
+    const project = await prisma.project.update({
+      where: {
+        id: id,
+      },
+      data: {
+        status,
+      },
+    });
+    return useResponseSuccess('ok');
+  }
+
   const { code_coverage, fuzzing_task_count, total_bugs_found, bugs_found } = result[0];
   const { bitmap_cvg } = code_coverage;
 

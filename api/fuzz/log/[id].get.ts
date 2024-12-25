@@ -3,11 +3,10 @@ import path from 'path';
 import prisma from '~/lib/prisma';
 
 const locateLogFilePath = (id: string, type: string) => {
-    if ("openFuzz" == type) {
-        return path.resolve(`work/${id}/fuzz.log`);
-    } 
     if ("sourceScan" == type) {
         return path.resolve(`work/${id}/joern/_check.log`);
+    } else {
+        return path.resolve(`work/${id}/fuzz.log`);
     }
 }
 
@@ -44,8 +43,11 @@ export default eventHandler(async (event) => {
 
         const lines = data.split('\n');
 
-        if (lines) {
-            lines.forEach((line, index) => {
+        // 获取最后 300 行（日志文件太大造成页面卡顿）
+        const last500Lines = lines.slice(-300);
+
+        if (last500Lines) {
+            last500Lines.forEach((line, index) => {
                 // console.log(`行 ${index + 1}: ${line}`);
                 sendLogData(line);
             });
