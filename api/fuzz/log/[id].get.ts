@@ -2,10 +2,28 @@ import fs from 'fs';
 import path from 'path';
 import prisma from '~/lib/prisma';
 
-export default eventHandler((event) => {
+const locateLogFilePath = (id: string, type: string) => {
+    if ("openFuzz" == type) {
+        return path.resolve(`work/${id}/fuzz.log`);
+    } 
+    if ("sourceScan" == type) {
+        return path.resolve(`work/${id}/joern/_check.log`);
+    }
+}
+
+export default eventHandler(async (event) => {
 
     const id = getRouterParam(event, 'id');
-    const logFilePath = path.resolve(`work/${id}/fuzz.log`);
+
+    const project = await prisma.project.findUnique({
+        where: {
+            id
+        },
+    });
+
+    const { type } = project;
+
+    const logFilePath = locateLogFilePath(id, type);
 
     event.node.res.setHeader('Content-Type', 'text/event-stream');
     event.node.res.setHeader('Cache-Control', 'no-cache');

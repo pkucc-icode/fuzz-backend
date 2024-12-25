@@ -49,6 +49,8 @@ do_send() {
     fi
 }
 
+# 访问 JSON 文件中 afl_fuzz_args 对象内的 fuzz_target 数组，并提取数组中的所有元素
+# 将 jq 命令的输出赋值给变量 fuzz_target
 if [[ -f "$json_file" ]]; then
     fuzz_target=$(jq -r '.afl_fuzz_args.fuzz_target[]' "$json_file")
 else

@@ -2,37 +2,29 @@ import prisma from "~/lib/prisma";
 
 export default defineEventHandler(async (event) => {
 
-    const { id, type, codeText ,report, status} = await readBody(event);
-    console.log("Scan result save param: id:", id);
-    console.log("Scan result save param: type:", type);
-    console.log("Scan result save param: codeText:\n", codeText);
-    console.log("Scan result save param: report:\n", report);
+    const { id, scans } = await readBody(event);
 
-    // 先删除该项目已有的 bugs
-    await prisma.bug.deleteMany({
+    console.log("ready********************");
+
+    await prisma.scan.deleteMany({
         where: {
-        projectId: id,
+            projectId: id,
         },
     });
 
-    if (id) {
-        const now = new Date();
-        const nowstring = now.toString();
-        const bug = await prisma.bug.create({
-            data:{
-                name: "代码扫描",
-                type: type,
-                risk: "高",
-                firstTime: nowstring,
-                total: 1,
-                codeText: codeText,
-                report: report,
-                projectId: id,
-                status,
-            },
-        });
+    const formattedScans = scans.map((bug: { type: string; code_line: number; code: string }) => ({
+        type: bug.type,
+        codeLine: bug.code_line, // 转换 code_line 到 codeLine
+        code: bug.code,
+        projectId: id, // 假设你需要将 id 关联到每条 bug 记录
+    }));
 
-        return useResponseSuccess(bug);
+    if (id) {
+        const result = await prisma.scan.createMany({
+            data: formattedScans,
+            skipDuplicates: true, // 可选：跳过重复的记录（基于唯一约束）
+          });
+        return useResponseSuccess(result);
 
     } else {
         return useResponseError('Scan result save error: no id', 'Scan result save error: no id');

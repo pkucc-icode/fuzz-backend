@@ -18,39 +18,32 @@ result_file="scan-result.json"
 cp $json_file joern/
 cd joern/
 
-if ! python3 joern.py "$json_file"; then
-    # 如果命令执行失败，则打印错误信息
-    echo "Error: Failed to execute python3 joern.py $json_file"
-    exit 1
-fi
+echo "开始执行joern.py"
+
+# if ! python3 joern.py "$json_file"; then
+#     # 如果命令执行失败，则打印错误信息
+#     echo "Error: Failed to execute python3 joern.py $json_file"
+#     exit 1
+# fi
 
 callback_url="http://192.168.200.146:5330/api/scan/callback"
 
-callback() {
-    id_value=$1
-    type=$2
-    report=$3
-    codeText=$4
+# 检查 JSON 文件是否存在
+if [[ ! -f "$result_file" ]]; then
+    echo "错误：文件 '$result_file' 不存在。"
+    exit 1
+fi
 
-    payload=$(jq -n --arg id "$id_value" --arg type "$type" --arg codeText "$codeText" --arg report "$report" \
-        '{id: $id, type: $type, codeText: $codeText, report:$report}')
+# 将 JSON 数组包裹到 { "scans": [] }
+wrapped_json=$(jq -c --arg id "$1" '{scans: ., id: $id}' "$result_file")
 
-    response=$(curl -s -o /dev/null -w "%{http_code}" -H "Content-Type: application/json" \
-        -d "$payload" "$callback_url")
 
-    if [[ $response -eq 200 ]]; then
-        return 1
-    else
-        return 0
-    fi
-}
+# 发送 POST 请求
+response=$(curl -s -o /dev/null -w "%{http_code}" -X POST -H "Content-Type: application/json" -d "$wrapped_json" "$callback_url")
 
-jq -c '.[] | .[]' "$result_file" | while read -r error; do
-    # 解析type、code_line和code字段
-    type=$(echo "$error" | jq -r '.type')
-    code_line=$(echo "$error" | jq -r '.code_line')
-    code=$(echo "$error" | jq -r '.code')
-
-    callback "$1" "$type" "$code_line" "$code"
-done
-
+# 检查响应状态码
+if [[ "$response" -eq 200 ]]; then
+    echo "成功发送数据：$wrapped_json"
+else
+    echo "发送失败，状态码：$response"
+fi

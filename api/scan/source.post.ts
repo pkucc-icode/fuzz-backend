@@ -66,7 +66,7 @@ async function startSourceScan(id: string, name: string, repoUrl: string, filePa
    await writeFile(id, jsonString);
  
    
-   scanSpawnPromise('bash', ['scan.sh', id], id)
+   scanSpawnPromise('bash', ['bash/scan.sh', id], id)
      .then((output: string) => {
        console.log('runscan.sh执行成功');
      })
