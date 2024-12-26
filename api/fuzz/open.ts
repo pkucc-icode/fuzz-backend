@@ -41,7 +41,7 @@ export default eventHandler(async (event) => {
           compilerSettings: compilerSettings || 'cmake',
           fuzz: fuzz || 'AFL++',
           fuzzTime: fuzzTime || '1day',
-          fuzzTarget: fuzzTarget || [],
+          fuzzTarget: fuzzTarget,
           fuzzCommands: fuzzCommands || [],
         },
       },
@@ -64,7 +64,7 @@ export default eventHandler(async (event) => {
           compilerSettings: compilerSettings || 'cmake',
           fuzz: fuzz || 'AFL++',
           fuzzTime: fuzzTime || '1day',
-          fuzzTarget: fuzzTarget || [],
+          fuzzTarget: fuzzTarget,
           fuzzCommands: fuzzCommands || [],
         },
       },
@@ -95,7 +95,7 @@ async function startOpenFuzz(id: string, name: string, repoUrl: string, filePath
       },
       "fuzzer": fuzz || 'AFL++',
       "fuzz_time": fuzzTime || '60s',
-      "fuzz_target": fuzzTarget || [],
+      "fuzz_target": fuzzTarget,
       "CC_module": "",
       "CXX_module": ""
     }
