@@ -2,7 +2,16 @@ import prisma from "~/lib/prisma";
 
 export default defineEventHandler(async (event) => {
 
-    const { id, scans } = await readBody(event);
+    const { id, status, scans } = await readBody(event);
+
+    await prisma.project.update({
+        where: {
+          id: id,
+        },
+        data: {
+          status,
+        },
+    });
 
     await prisma.scan.deleteMany({
         where: {

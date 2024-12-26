@@ -13,7 +13,7 @@ if [ -z "$1" ]; then
 fi
 
 json_file="scan-config.json"
-result_file="scan-result.json"
+result_file="result-config.json"
 
 cp $json_file joern/
 cd joern/
@@ -35,7 +35,7 @@ if [[ ! -f "$result_file" ]]; then
 fi
 
 # 将 JSON 数组包裹到 { "scans": [] }
-wrapped_json=$(jq -c --arg id "$1" '{scans: ., id: $id}' "$result_file")
+wrapped_json=$(jq -c --arg id "$1" '. | {scans: ., id: $id, status: "SUCCESS"}' "$result_file")
 
 
 # 发送 POST 请求

@@ -4,8 +4,6 @@ import { readFileContent } from '~/utils/fuzz';
 export default defineEventHandler(async (event) => {
   const { id, status, result } = await readBody(event);
 
-  console.log("id, status, result :", id, status, result);
-
   if ('FAIL' === status) {
     const project = await prisma.project.update({
       where: {
@@ -18,7 +16,7 @@ export default defineEventHandler(async (event) => {
     return useResponseSuccess('ok');
   }
 
-  const { code_coverage, fuzzing_task_count, total_bugs_found, bugs_found } = result[0];
+  const { code_coverage, fuzzing_task_count, total_bugs_found, bugs_found } = result;
   const { bitmap_cvg } = code_coverage;
 
   // 先删除该项目已有的 bugs

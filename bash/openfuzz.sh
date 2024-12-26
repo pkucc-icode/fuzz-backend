@@ -17,7 +17,7 @@ fi
 json_file="config.json"
 
 # 执行Python脚本并捕获错误
-if ! python3 agent.py "$json_file"; then
+if ! python3 docker_test.py "$json_file"; then
     # 如果命令执行失败，则打印错误信息
     echo "Error: Failed to execute python3 agent.py $json_file"
     exit 1
@@ -51,27 +51,38 @@ do_send() {
 
 # 访问 JSON 文件中 afl_fuzz_args 对象内的 fuzz_target 数组，并提取数组中的所有元素
 # 将 jq 命令的输出赋值给变量 fuzz_target
-if [[ -f "$json_file" ]]; then
-    fuzz_target=$(jq -r '.afl_fuzz_args.fuzz_target[]' "$json_file")
+# if [[ -f "$json_file" ]]; then
+#     fuzz_target=$(jq -r '.afl_fuzz_args.fuzz_target[]' "$json_file")
+# else
+#     echo "错误：文件 '$json_file' 不存在。"
+#     exit 1
+# fi
+
+# result="[]"
+
+# for target in $fuzz_target; do
+#     report="${target}_report.json"
+    
+#     if [[ -f "$report" ]]; then
+#         rep_json=$(cat "$report")
+#         result=$(echo "$result" | jq ". + [$rep_json]")
+#     else
+#         echo "错误：文件 '$report' 不存在。"
+#         do_send "$1" "FAIL" "$result"
+#         exit 1
+#     fi
+# done
+
+result_file="report.json"
+
+# 检查文件是否存在
+if [[ -f "$result_file" ]]; then
+    # 读取文件内容到 result 变量中
+    result=$(<"$result_file")
 else
-    echo "错误：文件 '$json_file' 不存在。"
+    echo "错误：文件 $result_file 不存在"
     exit 1
 fi
-
-result="[]"
-
-for target in $fuzz_target; do
-    report="${target}_report.json"
-    
-    if [[ -f "$report" ]]; then
-        rep_json=$(cat "$report")
-        result=$(echo "$result" | jq ". + [$rep_json]")
-    else
-        echo "错误：文件 '$report' 不存在。"
-        do_send "$1" "FAIL" "$result"
-        exit 1
-    fi
-done
 
 do_send "$1" "SUCCESS" "$result"
 
