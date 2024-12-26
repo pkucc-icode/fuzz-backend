@@ -1,6 +1,6 @@
 #!/bin/bash
 cd work
-cp openfuzz/* $1
+cp -r openfuzz/* $1
 cd $1
 
 rm -rf *output*
