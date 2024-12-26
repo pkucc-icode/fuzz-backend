@@ -33,7 +33,10 @@ export default eventHandler(async (event) => {
     };
 
     // 这是必须的，需要和客户端建立连接
-    sendLogData(`[  1%] Building Fuzz Task Start .........`);
+    sendLogData(`
+        [  0%] 欢迎使用燕智科技
+        [  0%] 准备环境 .........
+        `);
 
     fs.readFile(logFilePath, 'utf-8', (err, data) => {
         if (err) {

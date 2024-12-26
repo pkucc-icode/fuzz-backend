@@ -4,8 +4,6 @@ export default defineEventHandler(async (event) => {
 
     const { id, scans } = await readBody(event);
 
-    console.log("ready********************");
-
     await prisma.scan.deleteMany({
         where: {
             projectId: id,
@@ -16,7 +14,7 @@ export default defineEventHandler(async (event) => {
         type: bug.type,
         codeLine: bug.code_line, // 转换 code_line 到 codeLine
         code: bug.code,
-        projectId: id, // 假设你需要将 id 关联到每条 bug 记录
+        projectId: id, // 需要将 id 关联到每条 bug 记录
     }));
 
     if (id) {
