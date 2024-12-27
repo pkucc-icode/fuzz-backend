@@ -95,7 +95,7 @@ async function startWebFuzz(project: Project) {
       "use_ssl": use_ssl || false,
       "enable_checkers": enable_checkers,
       "disable_checkers": disable_checkers,
-      "host": host || "127.0.0.1",
+      "host": host || "",
       "token_refresh_interval": token_refresh_interval,
       "token_refresh_command": token_refresh_command
   };

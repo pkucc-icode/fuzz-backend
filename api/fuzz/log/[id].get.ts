@@ -47,7 +47,7 @@ export default eventHandler(async (event) => {
         const lines = data.split('\n');
 
         // 获取最后 300 行（日志文件太大造成页面卡顿）
-        const last500Lines = lines.slice(-300);
+        const last500Lines = lines.slice(-50);
 
         if (last500Lines) {
             last500Lines.forEach((line, index) => {
