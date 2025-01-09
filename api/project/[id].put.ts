@@ -14,9 +14,9 @@ export default defineEventHandler(async (event) => {
   const { name, status, result } = await readBody(event);
 
   if ('RUNNING' === status) {
-    spawnPromise('bash', ['run.sh', id], id)
+    spawnPromise('bash', ['bash/openfuzz.sh', id], id)
     .then((output: string) => {
-      console.log('run.sh执行成功');
+      console.log('openfuzz.sh执行成功');
     })
     .catch((error: Error) => {
       console.error('命令执行失败:', error);
