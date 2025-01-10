@@ -3,7 +3,7 @@ import { unAuthorizedResponse } from '~/utils/response';
 import prisma from '~/lib/prisma';
 
 //extract bug
-function extractSection(report: string): string {
+function extractSection(report: string): string[] {
   const lines = report.split('\n');
   let isSection = true;
   let section: string[] = [];
@@ -20,7 +20,7 @@ function extractSection(report: string): string {
     }
   });
 
-  return section.length > 0 ? section.join('\n') : 'No valid section found.';
+  return section;
 }
 
 export default defineEventHandler(async (event) => {
@@ -43,8 +43,9 @@ export default defineEventHandler(async (event) => {
       message: "Bug not found",
     };
   }
-  let extractedBugStackList = await extractSection(bug.report);
-  bug.report = extractedBugStackList
+  let stackList = await extractSection(bug.report);
+  const data : Record<string, any> = { ... bug }
+  data.stackList = stackList
   
-  return useResponseSuccess(bug);
+  return useResponseSuccess(data);
 });
