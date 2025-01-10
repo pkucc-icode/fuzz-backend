@@ -2,6 +2,27 @@ import { verifyAccessToken } from '~/utils/jwt-utils';
 import { unAuthorizedResponse } from '~/utils/response';
 import prisma from '~/lib/prisma';
 
+//extract bug
+function extractSection(report: string): string {
+  const lines = report.split('\n');
+  let isSection = true;
+  let section: string[] = [];
+
+  lines.forEach((line) => {
+    const trimmedLine = line.trim();
+    if (trimmedLine.startsWith('#') && isSection) {
+      isSection = true;
+      section.push(line);
+    } else if (isSection && trimmedLine !== '') {
+      section.push(line);
+    } else if (isSection && trimmedLine === '') {
+      isSection = false; 
+    }
+  });
+
+  return section.length > 0 ? section.join('\n') : 'No valid section found.';
+}
+
 export default defineEventHandler(async (event) => {
   const userinfo = verifyAccessToken(event);
   if (!userinfo) {
@@ -16,5 +37,14 @@ export default defineEventHandler(async (event) => {
     }
   })
 
+  if (!bug) {
+    return {
+      success: false,
+      message: "Bug not found",
+    };
+  }
+  let extractedBugStackList = await extractSection(bug.report);
+  bug.report = extractedBugStackList
+  
   return useResponseSuccess(bug);
 });
