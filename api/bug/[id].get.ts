@@ -11,16 +11,16 @@ function extractSection(report: string): string[] {
   let isSection = true;
   let section: string[] = [];
 
-  lines.forEach((line) => {
+  lines.forEach((line,index) => {
     const trimmedLine = line.trim();
     if (trimmedLine.startsWith('#') && isSection) {
       isSection = true;
       section.push(line);
-    } else if (isSection && trimmedLine !== '') {
-      section.push(line);
-    } else if (isSection && trimmedLine === '') {
-      isSection = false; 
-    }
+      const nextLine = lines[index + 1];
+      if (!nextLine) {
+        isSection = false;
+      }
+    } 
   });
 
   return section;
