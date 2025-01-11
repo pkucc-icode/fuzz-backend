@@ -12,6 +12,9 @@ export default eventHandler(async (event) => {
     orderBy: {
       createdAt: 'desc',
     },
+    include: {
+      project: true,
+    },
   })
 
   return useResponseSuccess(bugs);

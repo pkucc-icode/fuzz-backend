@@ -4,6 +4,9 @@ import prisma from '~/lib/prisma';
 
 //extract bug
 function extractSection(report: string): string[] {
+  if (!report) {
+    return [""]
+  }
   const lines = report.split('\n');
   let isSection = true;
   let section: string[] = [];
