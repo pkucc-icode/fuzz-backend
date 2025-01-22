@@ -17,14 +17,14 @@ fi
 json_file="config.json"
 
 # 执行Python脚本并捕获错误
-if ! python3 docker_test.py "$json_file"; then
+if ! python3 start.py "$json_file"; then
     # 如果命令执行失败，则打印错误信息
-    echo "Error: Failed to execute python3 agent.py $json_file"
+    echo "Error: Failed to execute python3 start.py $json_file"
     exit 1
 fi
 
 # if callback failure please check this url, i don't know why it not works
-url="http://192.168.200.146:5330/api/fuzz/callback-openfuzz"
+url="http://127.0.0.1:5330/api/fuzz/callback-openfuzz"
 
 
 
@@ -38,8 +38,21 @@ do_send() {
     payload=$(jq -n --arg id "$id_value" --arg status "$status_value" --argjson result "$result" \
         '{id: $id, status: $status, result: $result}')
 
-    response=$(curl -s -o /dev/null -w "%{http_code}" -H "Content-Type: application/json" \
-        -d "$payload" "$url")
+    # 打印 payload 内容以便调试
+    echo "Generated Payload:"
+    echo "$payload"
+    echo "-------------------"
+
+    # 构造 curl 命令
+    curl_command="curl -s -o /dev/null -w \"%{http_code}\" -H \"Content-Type: application/json\" -d '$payload' \"$url\""
+
+    # 打印 curl 命令
+    echo "Executing curl command:"
+    echo "$curl_command"
+    echo "-------------------"
+
+    # 执行 curl 命令并获取响应
+    response=$(eval "$curl_command")
 
     if [[ $response -eq 200 ]]; then
         echo "Update project status successfully."
@@ -85,6 +98,5 @@ else
 fi
 
 do_send "$1" "SUCCESS" "$result"
-
 
 echo "callback executed."

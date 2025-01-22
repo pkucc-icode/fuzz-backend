@@ -1,6 +1,22 @@
 import prisma from '~/lib/prisma';
 import { readFileContent } from '~/utils/fuzz';
 
+function cleanData(data: any) {
+  if (typeof data === 'string') {
+    return data.replace(/\x00/g, '');
+  } else if (Buffer.isBuffer(data)) {
+    let result = Buffer.alloc(data.length);
+    let index = 0;
+    for (let i = 0; i < data.length; i++) {
+      if (data[i]!== 0) {
+        result[index++] = data[i];
+      }
+    }
+    return result.slice(0, index);
+  }
+  return data;
+}
+
 export default defineEventHandler(async (event) => {
   const { id, status, result } = await readBody(event);
 
@@ -41,7 +57,7 @@ export default defineEventHandler(async (event) => {
             total: bug.total_discovery_count,
             codeText: bug.risk_code_display_file,
             report: bug.asan_report_file,
-            crash,
+            crash: cleanData(crash),
             projectId: id,
           },
         });
@@ -61,7 +77,6 @@ export default defineEventHandler(async (event) => {
       bugs: total_bugs_found
     },
   });
-
 
   return useResponseSuccess(project);
 });
