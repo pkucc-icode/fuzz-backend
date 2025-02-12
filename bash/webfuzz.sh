@@ -1,5 +1,11 @@
 echo "start do web fuzz"
 cd work
+
+# 检查目标目录是否存在，如果不存在则创建
+if [ ! -d "$1" ]; then
+  mkdir -p "$1" || { echo "Failed to create directory $1"; exit 1; }
+fi
+
 cp -r webfuzz/* $1
 cd $1
 
