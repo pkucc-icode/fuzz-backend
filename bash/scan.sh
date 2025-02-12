@@ -1,8 +1,14 @@
 #!/bin/bash
 cd work
 
+# 检查目标目录是否存在，如果不存在则创建
+if [ ! -d "$1" ]; then
+  mkdir -p "$1" || { echo "Failed to create directory $1"; exit 1; }
+fi
+
 cp -r scan/joern/ $1/
 cp -r scan/weggli/ $1/
+cp scan/result-config.json $1/
 
 cd $1
 
@@ -26,24 +32,15 @@ if ! python3 joern.py "$json_file"; then
     exit 1
 fi
 
-callback_url="http://192.168.200.146:5330/api/scan/callback"
-
-# 检查 JSON 文件是否存在
-if [[ ! -f "$result_file" ]]; then
-    echo "错误：文件 '$result_file' 不存在。"
-    exit 1
-fi
-
-# 将 JSON 数组包裹到 { "scans": [] }
-wrapped_json=$(jq -c --arg id "$1" '. | {scans: ., id: $id, status: "SUCCESS"}' "$result_file")
-
-
-# 发送 POST 请求
-response=$(curl -s -o /dev/null -w "%{http_code}" -X POST -H "Content-Type: application/json" -d "$wrapped_json" "$callback_url")
-
-# 检查响应状态码
-if [[ "$response" -eq 200 ]]; then
-    echo "成功发送数据：$wrapped_json"
+if [[ -f "$result_file" ]]; then
+    # 读取文件内容到 result 变量中
+    echo "成功：文件 $result_file 存在"
+    result=$(<"$result_file")
 else
-    echo "发送失败，状态码：$response"
+    echo "错误：文件 $result_file 不存在"
+    result=""
 fi
+
+cd ../../../bash/
+npx ts-node callback.ts "$1" "$result"
+echo "成功：任务执行完毕."

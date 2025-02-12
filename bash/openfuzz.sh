@@ -23,10 +23,10 @@ fi
 json_file="config.json"
 
 # 执行Python脚本并捕获错误
-# if ! python3 start.py "$json_file"; then
-#     # 如果命令执行失败，则打印错误信息
-#     echo "Error: Failed to execute python3 start.py $json_file"
-# fi
+if ! python3 start.py "$json_file"; then
+    # 如果命令执行失败，则打印错误信息
+    echo "Error: Failed to execute python3 start.py $json_file"
+fi
 
 
 result_file="report.json"

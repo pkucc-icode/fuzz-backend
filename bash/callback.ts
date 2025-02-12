@@ -62,7 +62,7 @@ async function callback(id: string, result: string) {
     await callbackWebFuzz(id, res_obj);
   }
 
-  if (type == 'scan') {
+  if (type == 'sourceScan') {
     await callbackScan(id, res_obj);
   }
 
@@ -84,8 +84,7 @@ async function callbackScan(id: string, result: Record<string, any>) {
       projectId: id,
     },
   });
-  const { scans } = result;
-  const formattedScans = scans.map((bug: { type: string; code_line: number; code: string }) => ({
+  const formattedScans = result.map((bug: { type: string; code_line: number; code: string }) => ({
     type: bug.type,
     codeLine: bug.code_line, // 转换 code_line 到 codeLine
     code: bug.code,
