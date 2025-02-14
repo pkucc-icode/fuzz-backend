@@ -52,20 +52,26 @@ async function callback(id: string, result: string) {
     return;
   }
 
-  const res_obj = JSON.parse(result);
-
   if (type == 'openFuzz') {
+    const res_obj = JSON.parse(result);
     await callbackOpenFuzz(id, res_obj);
+    await saveResObj(id, res_obj)
   }
 
   if (type == 'webFuzz') {
+    const res_obj = JSON.parse(result);
     await callbackWebFuzz(id, res_obj);
+    await saveResObj(id, res_obj)
   }
 
   if (type == 'sourceScan') {
-    await callbackScan(id, res_obj);
+    await callbackScan(id, result);
+    await saveResObj(id, {})
   }
+  
+}
 
+async function saveResObj(id: string, res_obj: Record<string, any>) {
   await prisma.project.update({
     where: {
       id,
@@ -78,13 +84,15 @@ async function callback(id: string, result: string) {
 }
 
 
-async function callbackScan(id: string, result: Record<string, any>) {
+async function callbackScan(id: string, result: string) {
+  const content = await readFileContent(result);
+  const res_obj = JSON.parse(content);
   await prisma.scan.deleteMany({
     where: {
       projectId: id,
     },
   });
-  const formattedScans = result.map((bug: { type: string; code_line: number; code: string }) => ({
+  const formattedScans = res_obj.map((bug: { type: string; code_line: number; code: string }) => ({
     type: bug.type,
     codeLine: bug.code_line, // 转换 code_line 到 codeLine
     code: bug.code,

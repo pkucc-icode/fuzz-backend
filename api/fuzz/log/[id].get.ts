@@ -4,7 +4,7 @@ import prisma from '~/lib/prisma';
 
 const locateLogFilePath = (id: string, type: string, name: string) => {
     if ("sourceScan" == type) {
-        return path.resolve(`work/${id}/joern/${name}/test.out`);
+        return path.resolve(`work/${id}/scan.log`);
     } else {
         return path.resolve(`work/${id}/fuzz.log`);
     }
