@@ -7,7 +7,6 @@ if [ ! -d "$1" ]; then
 fi
 
 cp -r scan/* $1/
-# cp -r scan/weggli/ $1/
 
 
 cd $1
@@ -21,17 +20,15 @@ fi
 json_file="scan-config.json"
 result_file="result-config.json"
 
-# cp $json_file joern/
-# cd joern/
 cp $json_file ./
 
 echo "开始执行codescan.py"
 
-# if ! python3 codescan.py "$json_file"; then
-#     # 如果命令执行失败，则打印错误信息
-#     echo "Error: Failed to execute python3 joern.py $json_file"
-#     exit 1
-# fi
+if ! python3 codescan.py "$json_file"; then
+    # 如果命令执行失败，则打印错误信息
+    echo "Error: Failed to execute python3 joern.py $json_file"
+    exit 1
+fi
 
 if [[ -f "$result_file" ]]; then
     # 读取文件内容到 result 变量中
