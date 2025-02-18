@@ -1,7 +1,7 @@
 import { verifyAccessToken } from '~/utils/jwt-utils';
 import { unAuthorizedResponse } from '~/utils/response';
 import prisma from '~/lib/prisma';
-import PDFDocument from 'pdfkit';
+// import PDFDocument from 'pdfkit';
 
 export default defineEventHandler(async (event) => {
     // const userinfo = verifyAccessToken(event);
@@ -20,17 +20,17 @@ export default defineEventHandler(async (event) => {
       }
     })
 
-    const doc = new PDFDocument();
+    // const doc = new PDFDocument();
 
     // 加载中文字体文件
-    const fontPath = './simsunb.ttf';
-    doc.registerFont('SimSun', fontPath);
+    // const fontPath = './simsunb.ttf';
+    // doc.registerFont('SimSun', fontPath);
 
     const { name, type, repoUrl, param, bugs,startTime, status, taskCount, coverage, projectBugs } = project;
     const title = `${name}项目漏洞挖掘报告`
-    doc.fontSize(16).text(title, 100, 100, {
-      align: 'center'
-    });
+    // doc.fontSize(16).text(title, 100, 100, {
+    //   align: 'center'
+    // });
 
     const introduce = `
     一、项目介绍
@@ -46,9 +46,9 @@ export default defineEventHandler(async (event) => {
 
     `
 
-    doc.fontSize(16).text(introduce, 100, 100, {
-      align: 'left'
-    });
+    // doc.fontSize(16).text(introduce, 100, 100, {
+    //   align: 'left'
+    // });
 
   
     const report = `
@@ -61,9 +61,9 @@ export default defineEventHandler(async (event) => {
 
     `
 
-    doc.fontSize(16).text(report, 100, 100, {
-      align: 'left'
-    });
+    // doc.fontSize(16).text(report, 100, 100, {
+    //   align: 'left'
+    // });
 
 
     const detail = `
@@ -102,26 +102,26 @@ export default defineEventHandler(async (event) => {
     });
 
 
-    doc.fontSize(16).text(detail + bugDetails, 100, 100, {
-      align: 'left'
-    });
+    // doc.fontSize(16).text(detail + bugDetails, 100, 100, {
+    //   align: 'left'
+    // });
 
     const filename = `${name}报告.pdf`
 
-    // 设置响应头
-    event.res.setHeader('Content-Type', 'application/pdf');
-    // event.res.setHeader(`Content-Disposition', 'attachment; filename="${filename}"`);
-    event.res.setHeader('Content-Disposition', 'attachment; filename="generated.pdf"');
+    event.res.setHeader('Content-Disposition', `attachment; filename="report.txt"`);
+    event.res.setHeader('Content-Type', 'text/plain');
     // 将内容作为文件流返回
     event.res.writeHead(200);
-    // 将 PDF 数据管道传输到响应流
-    doc.pipe(event.res);
 
-    doc.end();
+    const all = `
+      ${title}
 
-    // 监听 PDF 文档结束事件，确保数据完全写入响应流
-    doc.on('end', () => {
-      event.res.end();
-    });
+      ${introduce}
+
+      ${detail}
+
+      ${bugDetails}
+    `
+    event.res.end(all);
 
   });
