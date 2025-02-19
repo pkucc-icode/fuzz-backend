@@ -31,66 +31,66 @@ export default defineEventHandler(async (event) => {
 
 
     const { name, type, repoUrl, param, bugs,startTime, status, taskCount, coverage, projectBugs } = project;
-    const title = `# ${name}项目漏洞挖掘报告`
+    const title = `
+# ${name}项目漏洞挖掘报告`
 
     const introduce = `
-    ## 项目介绍
-    ### 项目参数
-    - 项目名 ${name}
-    - 类型 ${type}
-    - 项目源码 ${repoUrl}
-    - 编译器 ${param.compiler}
-    - 默认编译配置 ${param.compilerSettings}
-    - 模糊测试时间 ${param.fuzzTime}
-    - 模糊测试目标 ${param.fuzzTarget}
-    - 模糊测试命令 ${param.fuzzCommands}
+## 项目介绍
+### 项目参数
+- 项目名 ${name}
+- 类型 ${type}
+- 项目源码 ${repoUrl}
+- 编译器 ${param.compiler}
+- 默认编译配置 ${param.compilerSettings}
+- 模糊测试时间 ${param.fuzzTime}
+- 模糊测试目标 ${param.fuzzTarget}
+- 模糊测试命令 ${param.fuzzCommands}
 
     `
 
   
     const report = `
-    ### 项目FUZZ报告
-    - Bug总数 ${bugs}
-    - 开始时间 ${startTime}
-    - 状态 ${status}
-    - 覆盖率 ${coverage}
-    - 任务数量 ${taskCount}
-
+### 项目FUZZ报告
+- Bug总数 ${bugs}
+- 开始时间 ${startTime}
+- 状态 ${status}
+- 覆盖率 ${coverage}
+- 任务数量 ${taskCount}
     `
 
 
     const detail = `
-    ## 漏洞详情
+## 漏洞详情
     `
     let bugDetails = '';
 
     projectBugs.forEach((projectBug: Record<string, any>, index: number) => {
       bugDetails += `
-      ### ${index + 1}、${projectBug.name}漏洞详情
-      
-      #### 漏洞类型：
-      ${projectBug.type}
+### ${index + 1}、${projectBug.name}漏洞详情
 
-      #### 风险等级：
-      ${projectBug.risk}
+#### 漏洞类型：
+${projectBug.type}
 
-      #### 发现时间：
-      ${projectBug.time}
+#### 风险等级：
+${projectBug.risk}
 
-      #### 漏洞描述：
-      ${projectBug.desc}
+#### 发现时间：
+${projectBug.time}
 
-      #### 修复建议：
-      ${projectBug.fix}
+#### 漏洞描述：
+${projectBug.desc}
 
-      #### 源码文件路径: 
-      ${projectBug.source}
+#### 修复建议：
+${projectBug.fix}
 
-      #### 漏洞源码：
-      ${projectBug.codeText}
+#### 源码文件路径: 
+${projectBug.source}
 
-      #### ASAN报告:
-      ${projectBug.report}
+#### 漏洞源码：
+${projectBug.codeText}
+
+#### ASAN报告:
+${projectBug.report}
     `;
     });
 
