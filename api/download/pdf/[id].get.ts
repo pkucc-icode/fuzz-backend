@@ -90,7 +90,10 @@ ${projectBug.source}
 ${projectBug.codeText}
 
 #### ASAN报告:
+
+\`\`\`bash
 ${projectBug.report}
+\`\`\`
     `;
     });
 
