@@ -5,6 +5,7 @@ import {
 } from '~/utils/cookie-utils';
 import { verifyRefreshToken } from '~/utils/jwt-utils';
 import { forbiddenResponse } from '~/utils/response';
+import prisma from '~/lib/prisma';
 
 export default defineEventHandler(async (event) => {
   const refreshToken = getRefreshTokenFromCookie(event);
@@ -19,9 +20,14 @@ export default defineEventHandler(async (event) => {
     return forbiddenResponse(event);
   }
 
-  const findUser = MOCK_USERS.find(
-    (item) => item.username === userinfo.username,
-  );
+  // const findUser = MOCK_USERS.find(
+  //   (item) => item.username === userinfo.username,
+  // );
+  const findUser = await prisma.user.findFirst({
+    where: {
+      username: userinfo.username,
+    },
+  });
   if (!findUser) {
     return forbiddenResponse(event);
   }
