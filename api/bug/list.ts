@@ -11,6 +11,7 @@ export default eventHandler(async (event) => {
 
   const bugs = await prisma.bug.findMany({
     select: {
+      yqid: true,
       cve: true,
       name: true,
       type: true,

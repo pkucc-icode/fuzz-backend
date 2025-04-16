@@ -87,7 +87,9 @@ ${projectBug.fix}
 ${projectBug.source}
 
 #### 漏洞源码：
+\`\`\`c++
 ${projectBug.codeText}
+\`\`\`
 
 #### ASAN报告:
 

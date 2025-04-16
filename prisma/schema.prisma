@@ -59,6 +59,7 @@ model Scan {
 
 model Bug {
   id           String   @id @default(uuid())
+  yqid         String?
   cve          String?
   name         String
   type         String?
