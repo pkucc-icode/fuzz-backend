@@ -147,7 +147,7 @@ async function callbackOpenFuzz(id: string, result: Record<string, any>) {
   if (bugs_found) {
     await Promise.all(
       bugs_found.map(async (bug: Record<string, any>) => {
-        const crash = await readFileContent(bug.crash_file_path);
+        // const crash = await readFileContent(bug.crash_file_path);
         return prisma.bug.create({
           data: {
             name: bug.bug_id,
@@ -159,7 +159,7 @@ async function callbackOpenFuzz(id: string, result: Record<string, any>) {
             total: bug.total_discovery_count,
             codeText: bug.risk_code_display_file,
             report: bug.asan_report_file,
-            crash: cleanData(crash),
+            crash: bug.crash_file_path,
             projectId: id,
           },
         });

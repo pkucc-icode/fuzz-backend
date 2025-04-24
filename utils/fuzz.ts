@@ -54,3 +54,14 @@ export async function readFileContent(filePath: string): Promise<string> {
         return `NOT FOUND ${filePath}`;
     }
 }
+
+export async function readCrashFileContent(filePath: string): Promise<Buffer> {
+  try {
+      // 以二进制格式读取
+      const binaryData = await fs.readFile(filePath);
+      return binaryData;
+  } catch (error) {
+      console.error(`Error reading file ${filePath}:`, error);
+      throw error; // 重新抛出错误以便调用者处理
+  }
+}
