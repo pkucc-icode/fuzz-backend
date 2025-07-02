@@ -1,9 +1,10 @@
 # Dockerfile
-FROM node:20-alpine AS base
+FROM node:18-alpine AS base
 
 # Install dependencies
 FROM base AS deps
-RUN apk add --no-cache libressl1.1 libc6-compat
+RUN apk add --no-cache openssl
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY package.json ./
 RUN npm config set registry https://registry.npmmirror.com
