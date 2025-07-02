@@ -20,3 +20,5 @@ uploads
 static
 
 *.log
+
+.output
