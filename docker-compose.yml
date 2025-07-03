@@ -1,0 +1,39 @@
+version: "3.8"
+services:
+  fuzz-api:
+    image: fuzz-api
+    container_name: fuzz-api
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - DATABASE_URL=postgresql://postgres:changethis@fuzz-db:5432/app?schema=public
+    depends_on:
+      - fuzz-db
+    networks:
+      - fuzz-network
+
+  fuzz-db:
+    image: pgvector/pgvector:pg17
+    container_name: fuzz-db
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=changethis
+      - POSTGRES_DB=app
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5436:5432"  # 可选：暴露到主机（仅用于调试）
+    networks:
+      - fuzz-network
+
+volumes:
+  pgdata:  # 持久化数据库数据
+
+networks:
+  fuzz-network:
+    driver: bridge

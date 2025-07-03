@@ -1,10 +1,10 @@
 # Dockerfile
-FROM node:18-alpine AS base
+FROM node:20 AS base
 
 # Install dependencies
 FROM base AS deps
-RUN apk add --no-cache openssl
-RUN apk add --no-cache libc6-compat
+# RUN apk add --no-cache openssl
+# RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY package.json ./
 RUN npm config set registry https://registry.npmmirror.com
@@ -26,10 +26,11 @@ RUN npm run build
 # Create an optimised runner image
 FROM base AS runner
 WORKDIR /app
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nitro
 COPY --from=builder /app/.output ./.output
-USER nitro
+COPY . .
+# RUN addgroup --system --gid 1001 nodejs
+# RUN adduser --system --uid 1001 nitro
+# USER nitro
 EXPOSE 8080
 ENV PORT 8080
 CMD ["node", ".output/server/index.mjs", "--port", "8080"]
