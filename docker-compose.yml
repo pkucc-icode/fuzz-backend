@@ -1,5 +1,15 @@
 version: "3.8"
 services:
+  fuzz-web:
+    image: fuzz-web
+    container_name: fuzz-web
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - fuzz-api
+    networks:
+      - fuzz-network
   fuzz-api:
     image: fuzz-api
     container_name: fuzz-api
