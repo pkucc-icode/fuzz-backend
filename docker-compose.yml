@@ -11,6 +11,12 @@ services:
       - "8080:8080"
     environment:
       - DATABASE_URL=postgresql://postgres:changethis@fuzz-db:5432/app?schema=public
+    command: >
+      sh -c "
+        npx prisma db push &&
+        npx ts-node /app/scripts/add_user.ts &&
+        npm run start
+      "
     depends_on:
       - fuzz-db
     networks:

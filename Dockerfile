@@ -17,10 +17,6 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# RUN npx prisma db push
-# 生成 Prisma 客户端代码
-RUN npx prisma generate
-
 RUN npm run build
 
 # Create an optimised runner image
@@ -28,6 +24,8 @@ FROM base AS runner
 WORKDIR /app
 COPY --from=builder /app/.output ./.output
 COPY . .
+COPY --from=deps /app/node_modules ./node_modules
+RUN npx prisma generate
 # RUN addgroup --system --gid 1001 nodejs
 # RUN adduser --system --uid 1001 nitro
 # USER nitro
